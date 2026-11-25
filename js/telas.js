@@ -4,7 +4,7 @@
 // Único arquivo que mexe no HTML. Não sabe nada de sorteio nem de códigos.
 // Nomes digitados entram com textContent, nunca como HTML.
 
-import { TEXTOS } from "./config.js";
+import { CAMPOS_DETALHES, TEXTOS } from "./config.js";
 
 const TELAS = ["cadastro", "links", "revelar", "link-invalido"];
 
@@ -27,26 +27,63 @@ export function mostrarTela(nomeDaTela) {
 // =============================================================================
 // C A D A S T R O
 
-// Cria um campo de texto para cada participante.
-export function montarCamposDeNomes(quantidade) {
-  const campos = Array.from({ length: quantidade }, (_, indice) => criarCampo(indice));
-  elemento("campos-nomes").replaceChildren(...campos);
+// Cria um bloco por participante: nome e, embaixo, as medidas e cores.
+export function montarCamposDeParticipantes(quantidade) {
+  const blocos = Array.from({ length: quantidade }, (_, indice) => criarBlocoDePessoa(indice));
+  elemento("campos-nomes").replaceChildren(...blocos);
 }
 
-// Cria o campo "Pessoa N".
-function criarCampo(indice) {
-  const campo = document.createElement("input");
-  campo.type = "text";
-  campo.placeholder = `Pessoa ${indice + 1}`;
-  campo.setAttribute("aria-label", `Nome da pessoa ${indice + 1}`);
-  campo.autocomplete = "off";
-  return campo;
+// Cria o bloco "Pessoa N" com o campo de nome e os campos de detalhes.
+function criarBlocoDePessoa(indice) {
+  const bloco = document.createElement("fieldset");
+  bloco.className = "pessoa";
+
+  const titulo = document.createElement("legend");
+  titulo.textContent = `Pessoa ${indice + 1}`;
+
+  const campoNome = criarCampoComRotulo("Nome", "Ex.: Maria");
+  campoNome.input.classList.add("campo-nome");
+
+  const camposDetalhes = CAMPOS_DETALHES.map(({ chave, rotulo, exemplo }) => {
+    const campo = criarCampoComRotulo(rotulo, `Ex.: ${exemplo}`);
+    campo.input.dataset.chave = chave;
+    return campo;
+  });
+
+  const rotulos = [campoNome, ...camposDetalhes].map((campo) => campo.rotulo);
+  bloco.append(titulo, ...rotulos);
+  return bloco;
 }
 
-// Lê o que foi digitado em cada campo.
-export function lerNomesDigitados() {
-  const campos = elemento("campos-nomes").querySelectorAll("input");
-  return Array.from(campos, (campo) => campo.value);
+// Cria um campo de texto com o rótulo fixo em cima, para não se perder ao preencher.
+// Devolve { rotulo, input }: o rótulo vai para a tela, o input recebe as marcações.
+function criarCampoComRotulo(textoDoRotulo, dica) {
+  const rotulo = document.createElement("label");
+  const texto = document.createElement("span");
+  texto.textContent = textoDoRotulo;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = dica;
+  input.autocomplete = "off";
+
+  rotulo.append(texto, input);
+  return { rotulo, input };
+}
+
+// Lê cada bloco e devolve [{ nome, detalhes: { blusa, calca, ... } }].
+export function lerParticipantesDigitados() {
+  const blocos = elemento("campos-nomes").querySelectorAll(".pessoa");
+  return Array.from(blocos, lerBlocoDePessoa);
+}
+
+// Lê o nome e os detalhes de um bloco.
+function lerBlocoDePessoa(bloco) {
+  const detalhes = {};
+  bloco.querySelectorAll("[data-chave]").forEach((campo) => {
+    detalhes[campo.dataset.chave] = campo.value;
+  });
+  return { nome: bloco.querySelector(".campo-nome").value, detalhes };
 }
 
 // Lista os problemas do formulário embaixo dos campos.
@@ -109,7 +146,7 @@ export function avisarCopiaNoBotao(botao, textoOriginal, deuCerto) {
 
 // Troca o visual da página para o tema de Natal de quem abre o link.
 export function ativarTemaParticipante() {
-  document.body.classList.add("modo-participante");
+  document.documentElement.classList.add("modo-participante");
 }
 
 // Preenche a saudação da cena do presente.

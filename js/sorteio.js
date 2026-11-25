@@ -23,9 +23,17 @@ export function validarNomes(nomes, quantidadeEsperada) {
   return erros;
 }
 
-// Tira espaços sobrando no começo, no fim e no meio do nome.
+// Tira espaços sobrando no começo, no fim e no meio de um texto.
 export function limparNome(nome) {
   return nome.trim().replace(/\s+/g, " ");
+}
+
+// Limpa o nome e cada detalhe de um participante.
+export function limparParticipante({ nome, detalhes }) {
+  const detalhesLimpos = Object.fromEntries(
+    Object.entries(detalhes).map(([chave, valor]) => [chave, limparNome(valor)]),
+  );
+  return { nome: limparNome(nome), detalhes: detalhesLimpos };
 }
 
 // Diz se a lista tem dois nomes iguais, sem diferenciar maiúsculas.

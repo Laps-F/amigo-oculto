@@ -3,10 +3,11 @@
 // R E V E L A Ç Ã O
 // Animação da tela de quem abre o link:
 //   brilhos no fundo -> laço balança -> presente abre -> confetes -> faixa com o nome
+//   -> aviso de segredo -> cartão com medidas e cores da pessoa sorteada
 // Os movimentos ficam no CSS (css/revelacao.css). Aqui só decidimos a ordem e
 // criamos as peças soltas (brilhos e confetes).
 
-import { ANIMACAO } from "./config.js";
+import { ANIMACAO, CAMPOS_DETALHES } from "./config.js";
 
 const CORES_CONFETE = ["#e8c35a", "#f8e3a3", "#b3122b", "#ffffff", "#2e8b57", "#d4a017"];
 
@@ -16,13 +17,15 @@ const elemento = (id) => document.getElementById(id);
 // =============================================================================
 // S E Q U Ê N C I A
 
-// Roda a animação inteira e termina com o nome sorteado na faixa.
-export async function revelarPresente(nomeSorteado) {
-  elemento("nome-sorteado").textContent = nomeSorteado;
+// Roda a animação inteira e termina com o nome e os detalhes da pessoa sorteada.
+// pessoaSorteada: { nome, detalhes: { blusa, calca, ... } }
+export async function revelarPresente(pessoaSorteada) {
+  elemento("nome-sorteado").textContent = pessoaSorteada.nome;
+  const temDetalhes = preencherDetalhes(pessoaSorteada.detalhes);
   criarBrilhos(ANIMACAO.QUANTIDADE_BRILHOS);
 
   if (prefereMenosMovimento()) {
-    mostrarFinalDireto();
+    mostrarFinalDireto(temDetalhes);
     return;
   }
 
@@ -33,6 +36,8 @@ export async function revelarPresente(nomeSorteado) {
   elemento("faixa").classList.add("visivel");
   await esperar(ANIMACAO.ESPERA_SEGREDO);
   elemento("segredo").classList.add("visivel");
+  await esperar(ANIMACAO.ESPERA_DETALHES);
+  mostrarDetalhes(temDetalhes);
 }
 
 // Liga o balanço do laço e espera ele terminar.
@@ -50,10 +55,38 @@ function abrirPresente() {
 }
 
 // Sem animação: presente aberto, faixa e aviso já visíveis.
-function mostrarFinalDireto() {
+function mostrarFinalDireto(temDetalhes) {
   elemento("presente").classList.add("aberto");
   elemento("faixa").classList.add("visivel");
   elemento("segredo").classList.add("visivel");
+  mostrarDetalhes(temDetalhes);
+}
+
+// =============================================================================
+// D E T A L H E S   D A   P E S S O A   S O R T E A D A
+
+// Monta a lista de medidas e cores. Devolve false se nenhuma foi preenchida.
+function preencherDetalhes(detalhes) {
+  const preenchidos = CAMPOS_DETALHES.filter(({ chave }) => detalhes[chave]);
+  const linhas = preenchidos.flatMap(({ chave, rotulo }) => criarLinhaDeDetalhe(rotulo, detalhes[chave]));
+  elemento("lista-detalhes").replaceChildren(...linhas);
+  return preenchidos.length > 0;
+}
+
+// Cria o par rótulo + valor de um detalhe.
+function criarLinhaDeDetalhe(rotulo, valor) {
+  const termo = document.createElement("dt");
+  termo.textContent = rotulo;
+  const descricao = document.createElement("dd");
+  descricao.textContent = valor;
+  return [termo, descricao];
+}
+
+// Mostra o cartão de detalhes, só se houver algo para mostrar.
+function mostrarDetalhes(temDetalhes) {
+  const cartao = elemento("detalhes");
+  cartao.hidden = !temDetalhes;
+  requestAnimationFrame(() => cartao.classList.add("visivel"));
 }
 
 // =============================================================================
@@ -91,7 +124,7 @@ function criarConfete(indice) {
   const angulo = sortearEntre(-Math.PI * 0.95, -Math.PI * 0.05);
   const distancia = sortearEntre(90, 230);
 
-  return criarPeca(tipo, {
+  const peca = criarPeca(tipo, {
     "--dx": `${Math.cos(angulo) * distancia}px`,
     "--dy": `${Math.sin(angulo) * distancia}px`,
     "--giro": `${sortearEntre(-720, 720)}deg`,
@@ -99,6 +132,9 @@ function criarConfete(indice) {
     "--duracao": `${sortearEntre(1.6, 2.6)}s`,
     "--atraso": `${sortearEntre(0, 0.25)}s`,
   });
+  // Depois de cair, a peça sai da página para não ficar escondida fora da tela.
+  peca.addEventListener("animationend", () => peca.remove());
+  return peca;
 }
 
 // =============================================================================

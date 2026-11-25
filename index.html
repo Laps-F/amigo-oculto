@@ -22,7 +22,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Amigo oculto de Natal</title>
+  <title>Nosso fim de ano</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
   <link rel="stylesheet" href="css/estilo.css">
@@ -32,15 +32,15 @@
   <div id="brilhos" class="brilhos" aria-hidden="true"></div>
 
   <main class="pagina">
-    <h1>Amigo oculto de Natal</h1>
+    <h1>♡ Nosso fim de ano ♡</h1>
 
     <!-- =================================================================== -->
     <!-- O R G A N I Z A D O R A                                               -->
 
     <section id="tela-cadastro" class="tela" hidden>
       <h2>Cadastrar participantes</h2>
-      <p>Escreva o nome de cada pessoa, inclusive o seu. Você vai receber um link para cada uma, sem ver quem tirou quem.</p>
-      <form id="formulario-nomes">
+      <p>Escreva o nome de cada pessoa, inclusive o seu. Medidas e cores são opcionais: elas aparecem só para quem tirar aquela pessoa. Você vai receber um link para cada uma, sem ver quem tirou quem.</p>
+      <form id="formulario-nomes" novalidate>
         <div id="campos-nomes"></div>
         <ul id="erros-formulario" class="erros"></ul>
         <button type="submit">Sortear e gerar links</button>
@@ -84,7 +84,12 @@
         </div>
       </div>
 
-      <p id="segredo" class="segredo">Guarde segredo!</p>
+      <p id="segredo" class="segredo">Guarde segredo, em? Nada de contar para o parceiro 👀</p>
+
+      <section id="detalhes" class="detalhes" hidden>
+        <h2>Para acertar no presente</h2>
+        <dl id="lista-detalhes"></dl>
+      </section>
     </section>
 
     <section id="tela-link-invalido" class="tela" hidden>

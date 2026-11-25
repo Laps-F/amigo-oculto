@@ -58,6 +58,12 @@ input {
    =========================================================================
    T E L A S */
 
+.pessoa { margin: 0 0 16px; padding: 12px 14px 4px; border: 1px solid var(--borda); border-radius: 10px; }
+.pessoa legend { font-weight: 700; padding: 0 6px; }
+.pessoa .campo-nome { font-weight: 600; }
+.pessoa label { display: block; font-size: 14px; }
+.pessoa label input { margin-top: 2px; }
+
 .lista-links { display: grid; gap: 16px; margin-bottom: 16px; }
 .linha-link { display: grid; gap: 4px; }
 .linha-link input { margin-bottom: 0; font-size: 13px; }

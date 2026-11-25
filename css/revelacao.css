@@ -1,8 +1,9 @@
 /* =========================================================================
    =========================================================================
    C E N A   D O   P R E S E N T E
-   Tela de quem abre o link. Só vale quando o body tem a classe
+   Tela de quem abre o link. Só vale quando o <html> tem a classe
    "modo-participante", então a tela da organizadora não muda.
+   O fundo fica no <html> para cobrir a página inteira, mesmo rolando.
 
    Ordem da animação (comandada por js/revelacao.js):
      1. .balancando no presente: o laço e a caixa balançam por 2 s
@@ -19,10 +20,15 @@
   --vermelho: #b3122b;
   --vermelho-escuro: #7d0a1c;
 
-  background: radial-gradient(ellipse at 50% 35%, var(--verde-fundo), var(--verde-escuro) 75%) fixed;
+  min-height: 100%;
+  background: radial-gradient(ellipse at 50% 300px, var(--verde-fundo), var(--verde-escuro) 600px) var(--verde-escuro);
+  overflow-x: clip;
+}
+
+.modo-participante body {
+  background: transparent;
   color: #fdf6e3;
-  min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .modo-participante h1 {
@@ -45,6 +51,36 @@
   transition: opacity 0.8s;
 }
 .segredo.visivel { opacity: 1; }
+
+/* =========================================================================
+   =========================================================================
+   C A R T Ã O   D E   D E T A L H E S
+   Medidas e cores da pessoa sorteada, no fim da cena. */
+
+.detalhes {
+  max-width: 380px;
+  margin: 24px auto 40px;
+  padding: 18px 22px 8px;
+  text-align: left;
+  border: 1px solid var(--dourado);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+.detalhes.visivel { opacity: 1; transform: none; }
+
+.detalhes h2 {
+  margin: 0 0 12px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 24px;
+  color: var(--dourado);
+  text-align: center;
+}
+
+.detalhes dt { font-size: 16px; color: var(--dourado-claro); }
+.detalhes dd { margin: 2px 0 14px; font-size: 22px; font-weight: 600; overflow-wrap: break-word; }
 
 /* =========================================================================
    =========================================================================
@@ -299,5 +335,6 @@
   .brilho,
   .presente.balancando,
   .presente.balancando .laco { animation: none; }
-  .faixa.visivel { transition: none; }
+  .faixa.visivel,
+  .detalhes { transition: none; }
 }

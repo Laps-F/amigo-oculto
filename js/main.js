@@ -9,7 +9,7 @@ import { NUMERO_PARTICIPANTES, TEXTOS, URL_DO_SITE } from "./config.js";
 import { decodificarResultado } from "./codificacao.js";
 import { juntarLinksEmTexto, lerCodigoDoEndereco, montarLinks } from "./links.js";
 import { revelarPresente } from "./revelacao.js";
-import { limparNome, sortearPares, validarNomes } from "./sorteio.js";
+import { limparParticipante, sortearPares, validarNomes } from "./sorteio.js";
 import * as telas from "./telas.js";
 
 // Links do último sorteio, guardados só na memória desta página.
@@ -37,23 +37,24 @@ function iniciar() {
 // =============================================================================
 // M O D O   O R G A N I Z A D O R A
 
-// Mostra o formulário de cadastro dos nomes.
+// Mostra o formulário de cadastro dos participantes.
 function iniciarModoOrganizadora() {
-  telas.montarCamposDeNomes(NUMERO_PARTICIPANTES);
+  telas.montarCamposDeParticipantes(NUMERO_PARTICIPANTES);
   telas.mostrarTela("cadastro");
 }
 
 // Valida os nomes, sorteia e mostra os links, sem mostrar o resultado.
 function tratarSortear() {
-  const nomes = telas.lerNomesDigitados().map(limparNome);
+  const participantes = telas.lerParticipantesDigitados().map(limparParticipante);
+  const nomes = participantes.map((pessoa) => pessoa.nome);
   const erros = validarNomes(nomes, NUMERO_PARTICIPANTES);
   telas.mostrarErrosDoFormulario(erros);
   if (erros.length > 0) {
     return;
   }
 
-  const pares = sortearPares(nomes.length);
-  linksGerados = montarLinks(nomes, pares, enderecoBase());
+  const pares = sortearPares(participantes.length);
+  linksGerados = montarLinks(participantes, pares, enderecoBase());
   telas.montarListaDeLinks(linksGerados, copiarComAviso);
   telas.mostrarTela("links");
 }
@@ -88,7 +89,7 @@ function iniciarModoParticipante(codigo) {
   telas.ativarTemaParticipante();
   telas.prepararRevelacao(resultado.nomeDeQuemTira);
   telas.mostrarTela("revelar");
-  revelarPresente(resultado.nomeSorteado);
+  revelarPresente(resultado.pessoaSorteada);
 }
 
 // =============================================================================

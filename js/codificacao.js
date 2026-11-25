@@ -1,23 +1,33 @@
 // =============================================================================
 // =============================================================================
 // C O D I F I C A Ç Ã O
-// Transforma "quem tira quem" em um código que não dá para ler de olho, e volta.
-// O código usa só 0-9 e a-f, que é o que pode ir no fim do link (#codigo).
+// Transforma "quem tira quem" (com as medidas e cores da pessoa sorteada) em um
+// código que não dá para ler de olho, e volta.
+// O código usa só letras, números, "-" e "_", que podem ir no fim do link.
 //
 // Importante: isto é embaralhamento, não criptografia. Serve para a
 // organizadora não descobrir o resultado sem querer, olhando o link.
+//
+// Conteúdo do código, em ordem:
+//   [nome de quem tira, nome sorteado, ...detalhes na ordem de CAMPOS_DETALHES]
 
-import { TAMANHO_SAL } from "./config.js";
+import { CAMPOS_DETALHES, TAMANHO_SAL } from "./config.js";
 
 // =============================================================================
 // C O D I F I C A R
 
-// Gera o código de uma pessoa a partir do nome dela e do nome que ela tirou.
-export function codificarResultado(nomeDeQuemTira, nomeSorteado, aleatorio = Math.random) {
-  const conteudo = new TextEncoder().encode(JSON.stringify([nomeDeQuemTira, nomeSorteado]));
+// Gera o código de uma pessoa a partir do nome dela e da pessoa que ela tirou.
+export function codificarResultado(nomeDeQuemTira, pessoaSorteada, aleatorio = Math.random) {
+  const lista = [nomeDeQuemTira, pessoaSorteada.nome, ...detalhesEmOrdem(pessoaSorteada.detalhes)];
+  const conteudo = new TextEncoder().encode(JSON.stringify(lista));
   const sal = gerarSal(aleatorio);
   const embaralhado = misturarComSal(conteudo, sal);
-  return paraHexadecimal(sal) + paraHexadecimal(embaralhado);
+  return paraBase64Url(juntarBytes(sal, embaralhado));
+}
+
+// Põe os detalhes na ordem fixa de CAMPOS_DETALHES (vazio quando faltar).
+function detalhesEmOrdem(detalhes = {}) {
+  return CAMPOS_DETALHES.map(({ chave }) => detalhes[chave] ?? "");
 }
 
 // Cria bytes aleatórios para deixar cada código diferente.
@@ -28,9 +38,9 @@ function gerarSal(aleatorio) {
 // =============================================================================
 // D E C O D I F I C A R
 
-// Recupera { nomeDeQuemTira, nomeSorteado } do código, ou null se ele for inválido.
+// Recupera { nomeDeQuemTira, pessoaSorteada: { nome, detalhes } }, ou null se inválido.
 export function decodificarResultado(codigo) {
-  const bytes = deHexadecimal(codigo);
+  const bytes = deBase64Url(codigo);
   if (!bytes || bytes.length <= TAMANHO_SAL) {
     return null;
   }
@@ -39,16 +49,34 @@ export function decodificarResultado(codigo) {
   return lerConteudo(conteudo);
 }
 
-// Converte os bytes de volta para os dois nomes, conferindo o formato.
+// Converte os bytes de volta para os nomes e detalhes, conferindo o formato.
 function lerConteudo(conteudo) {
+  const lista = lerListaDeTextos(conteudo);
+  if (!lista || lista.length < 2) {
+    return null;
+  }
+  const [nomeDeQuemTira, nomeSorteado, ...valores] = lista;
+  return {
+    nomeDeQuemTira,
+    pessoaSorteada: { nome: nomeSorteado, detalhes: detalhesDaLista(valores) },
+  };
+}
+
+// Lê os bytes como uma lista JSON de textos, ou null se não for isso.
+function lerListaDeTextos(conteudo) {
   try {
     const texto = new TextDecoder("utf-8", { fatal: true }).decode(conteudo);
-    const [nomeDeQuemTira, nomeSorteado] = JSON.parse(texto);
-    const formatoValido = typeof nomeDeQuemTira === "string" && typeof nomeSorteado === "string";
-    return formatoValido ? { nomeDeQuemTira, nomeSorteado } : null;
+    const lista = JSON.parse(texto);
+    const ehListaDeTextos = Array.isArray(lista) && lista.every((item) => typeof item === "string");
+    return ehListaDeTextos ? lista : null;
   } catch {
     return null;
   }
+}
+
+// Monta { chave: valor } a partir dos valores na ordem de CAMPOS_DETALHES.
+function detalhesDaLista(valores) {
+  return Object.fromEntries(CAMPOS_DETALHES.map(({ chave }, posicao) => [chave, valores[posicao] ?? ""]));
 }
 
 // =============================================================================
@@ -59,16 +87,29 @@ function misturarComSal(bytes, sal) {
   return bytes.map((byte, posicao) => byte ^ sal[posicao % sal.length]);
 }
 
-// Bytes -> texto em hexadecimal ("0a3f...").
-function paraHexadecimal(bytes) {
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+// Junta duas listas de bytes em uma.
+function juntarBytes(primeira, segunda) {
+  const juntos = new Uint8Array(primeira.length + segunda.length);
+  juntos.set(primeira);
+  juntos.set(segunda, primeira.length);
+  return juntos;
 }
 
-// Texto em hexadecimal -> bytes, ou null se o texto não for hexadecimal.
-function deHexadecimal(texto) {
-  if (!/^([0-9a-f]{2})+$/.test(texto)) {
+// Bytes -> texto base64 próprio para link (sem "+", "/" e "=").
+function paraBase64Url(bytes) {
+  const binario = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+  return btoa(binario).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+// Texto base64 de link -> bytes, ou null se o texto não for válido.
+function deBase64Url(texto) {
+  if (!/^[A-Za-z0-9_-]+$/.test(texto)) {
     return null;
   }
-  const pares = texto.match(/../g);
-  return Uint8Array.from(pares, (par) => parseInt(par, 16));
+  try {
+    const binario = atob(texto.replace(/-/g, "+").replace(/_/g, "/"));
+    return Uint8Array.from(binario, (letra) => letra.charCodeAt(0));
+  } catch {
+    return null;
+  }
 }

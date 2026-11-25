@@ -9,6 +9,17 @@ export const NUMERO_PARTICIPANTES = 6;
 // Vazio: usa o endereço da própria página (funciona em qualquer hospedagem).
 export const URL_DO_SITE = "";
 
+// Informações de cada pessoa que aparecem para quem tirar ela.
+// A ordem aqui é a ordem na tela e no código do link: para não quebrar links
+// já enviados, só acrescente campos novos no fim.
+export const CAMPOS_DETALHES = [
+  { chave: "blusa", rotulo: "Tamanho de blusa", exemplo: "M" },
+  { chave: "calca", rotulo: "Tamanho de calça", exemplo: "40" },
+  { chave: "sapato", rotulo: "Numeração de sapato", exemplo: "37" },
+  { chave: "coresPreferidas", rotulo: "Preferência de cores", exemplo: "azul, verde" },
+  { chave: "coresEvitar", rotulo: "Cores que não gosta", exemplo: "laranja" },
+];
+
 // Tempos da animação do presente, em milissegundos.
 // DURACAO_BALANCO precisa bater com a animação "balancar" em css/revelacao.css.
 export const ANIMACAO = {
@@ -16,6 +27,7 @@ export const ANIMACAO = {
   DURACAO_BALANCO: 2000,
   ESPERA_FAIXA: 350,
   ESPERA_SEGREDO: 900,
+  ESPERA_DETALHES: 700,
   QUANTIDADE_CONFETES: 90,
   QUANTIDADE_BRILHOS: 28,
 };

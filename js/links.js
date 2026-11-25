@@ -6,17 +6,18 @@
 import { codificarResultado } from "./codificacao.js";
 
 // Gera [{ nome, link }] para cada participante, a partir do sorteio.
+// participantes: [{ nome, detalhes }]; pares: { indiceDeQuemTira: indiceSorteado }.
 export function montarLinks(participantes, pares, enderecoBase) {
-  return participantes.map((nome, indice) => {
-    const nomeSorteado = participantes[pares[indice]];
-    const codigo = codificarResultado(nome, nomeSorteado);
-    return { nome, link: `${enderecoBase}#${codigo}` };
+  return participantes.map((pessoa, indice) => {
+    const pessoaSorteada = participantes[pares[indice]];
+    const codigo = codificarResultado(pessoa.nome, pessoaSorteada);
+    return { nome: pessoa.nome, link: `${enderecoBase}#${codigo}` };
   });
 }
 
 // Lê o código que vem depois do # no endereço aberto (texto vazio se não houver).
 export function lerCodigoDoEndereco(hash) {
-  return hash.replace(/^#/, "").toLowerCase();
+  return hash.replace(/^#/, "").trim();
 }
 
 // Junta os links em um texto só, um por linha, para colar onde quiser.
