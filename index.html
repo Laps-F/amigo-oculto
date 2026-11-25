@@ -8,12 +8,14 @@
 
   Mapa dos arquivos:
     index.html         estrutura das telas (só marcação)
-    css/estilo.css     estilo básico
+    css/estilo.css     estilo básico (tela da organizadora)
+    css/revelacao.css  cena do presente (tela de quem abre o link)
     js/config.js       constantes: quantidade de pessoas, endereço e textos
     js/sorteio.js      regras do sorteio (funções puras)
     js/codificacao.js  embaralha e desembaralha o resultado de cada link
     js/links.js        monta os links e lê o código do endereço
     js/telas.js        desenho das telas e leitura do formulário
+    js/revelacao.js    animação do presente: brilhos, laço, confetes e faixa
     js/main.js         ponto de entrada: decide o modo e liga as partes
 -->
 <html lang="pt-BR">
@@ -21,9 +23,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Amigo oculto de Natal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
   <link rel="stylesheet" href="css/estilo.css">
+  <link rel="stylesheet" href="css/revelacao.css">
 </head>
 <body>
+  <div id="brilhos" class="brilhos" aria-hidden="true"></div>
+
   <main class="pagina">
     <h1>Amigo oculto de Natal</h1>
 
@@ -54,16 +61,30 @@
     <!-- =================================================================== -->
     <!-- P A R T I C I P A N T E                                               -->
 
-    <section id="tela-revelar" class="tela participante" hidden>
+    <section id="tela-revelar" class="tela cena" hidden>
       <p class="saudacao">Olá, <strong id="nome-quem"></strong>!</p>
-      <p>Seu amigo oculto aparece em</p>
-      <p id="contagem" class="contagem" aria-live="polite"></p>
-    </section>
 
-    <section id="tela-resultado" class="tela participante" hidden>
-      <p class="saudacao">Você tirou:</p>
-      <p id="nome-sorteado" class="sorteado"></p>
-      <p>Guarde segredo!</p>
+      <div class="palco">
+        <div id="confetes" class="confetes" aria-hidden="true"></div>
+
+        <div id="faixa" class="faixa" aria-live="polite">
+          <span class="faixa-rotulo">Você tirou</span>
+          <span id="nome-sorteado" class="faixa-nome"></span>
+        </div>
+
+        <div id="presente" class="presente" aria-hidden="true">
+          <div class="tampa">
+            <div class="laco">
+              <span class="alca esquerda"></span>
+              <span class="alca direita"></span>
+              <span class="no"></span>
+            </div>
+          </div>
+          <div class="caixa"></div>
+        </div>
+      </div>
+
+      <p id="segredo" class="segredo">Guarde segredo!</p>
     </section>
 
     <section id="tela-link-invalido" class="tela" hidden>

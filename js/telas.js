@@ -6,7 +6,7 @@
 
 import { TEXTOS } from "./config.js";
 
-const TELAS = ["cadastro", "links", "revelar", "resultado", "link-invalido"];
+const TELAS = ["cadastro", "links", "revelar", "link-invalido"];
 
 // Tempo que o botão mostra "Copiado!" antes de voltar ao texto normal.
 const TEMPO_AVISO_COPIA_MS = 1500;
@@ -107,19 +107,14 @@ export function avisarCopiaNoBotao(botao, textoOriginal, deuCerto) {
 // =============================================================================
 // P A R T I C I P A N T E
 
-// Preenche a saudação da tela de contagem.
+// Troca o visual da página para o tema de Natal de quem abre o link.
+export function ativarTemaParticipante() {
+  document.body.classList.add("modo-participante");
+}
+
+// Preenche a saudação da cena do presente.
 export function prepararRevelacao(nomeDeQuemTira) {
   elemento("nome-quem").textContent = nomeDeQuemTira;
-}
-
-// Mostra o número atual da contagem.
-export function mostrarNumeroDaContagem(numero) {
-  elemento("contagem").textContent = String(numero);
-}
-
-// Preenche a tela de resultado.
-export function prepararResultado(nomeSorteado) {
-  elemento("nome-sorteado").textContent = nomeSorteado;
 }
 
 // =============================================================================

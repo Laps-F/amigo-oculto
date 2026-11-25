@@ -63,10 +63,5 @@ input {
 .linha-link input { margin-bottom: 0; font-size: 13px; }
 .alerta { font-weight: 600; }
 .acoes { display: flex; flex-wrap: wrap; gap: 8px; }
-/* Tela de quem abre o link: letras grandes, centralizadas, fáceis de ler. */
-.participante { text-align: center; font-size: 22px; }
-.saudacao { font-size: 28px; }
-.contagem { font-size: 120px; font-weight: 700; line-height: 1; margin: 16px 0; color: var(--destaque); }
-.sorteado { font-size: clamp(40px, 12vw, 64px); font-weight: 700; color: var(--destaque); margin: 16px 0; overflow-wrap: anywhere; }
 .dica { opacity: 0.75; font-size: 14px; }
 .erros { color: var(--destaque); padding-left: 18px; }

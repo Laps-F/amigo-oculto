@@ -1,0 +1,303 @@
+/* =========================================================================
+   =========================================================================
+   C E N A   D O   P R E S E N T E
+   Tela de quem abre o link. Só vale quando o body tem a classe
+   "modo-participante", então a tela da organizadora não muda.
+
+   Ordem da animação (comandada por js/revelacao.js):
+     1. .balancando no presente: o laço e a caixa balançam por 2 s
+     2. .aberto no presente: a tampa voa e os confetes saem
+     3. .visivel na faixa: a faixa com o nome sobe de dentro da caixa
+     4. .visivel no "Guarde segredo!" */
+
+.modo-participante {
+  --verde-fundo: #0b3a2a;
+  --verde-escuro: #05231a;
+  --dourado: #e8c35a;
+  --dourado-claro: #f8e3a3;
+  --dourado-escuro: #a9811f;
+  --vermelho: #b3122b;
+  --vermelho-escuro: #7d0a1c;
+
+  background: radial-gradient(ellipse at 50% 35%, var(--verde-fundo), var(--verde-escuro) 75%) fixed;
+  color: #fdf6e3;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.modo-participante h1 {
+  color: var(--dourado);
+  font-family: "Playfair Display", Georgia, serif;
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 0.5px;
+}
+
+.cena { text-align: center; position: relative; z-index: 1; }
+
+.saudacao { font-size: 26px; margin: 8px 0 0; }
+.saudacao strong { color: var(--dourado-claro); }
+
+.segredo {
+  font-size: 22px;
+  color: var(--dourado-claro);
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+.segredo.visivel { opacity: 1; }
+
+/* =========================================================================
+   =========================================================================
+   B R I L H O S   D O   F U N D O */
+
+.brilhos { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+.brilho {
+  position: absolute;
+  width: var(--tamanho);
+  height: var(--tamanho);
+  background: var(--dourado-claro);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  opacity: 0.15;
+  animation: piscar var(--duracao) ease-in-out var(--atraso) infinite;
+}
+
+@keyframes piscar {
+  0%, 100% { opacity: 0.15; transform: scale(0.6) rotate(0deg); }
+  50% { opacity: 0.95; transform: scale(1) rotate(45deg); }
+}
+
+/* =========================================================================
+   =========================================================================
+   P A L C O
+   Área onde ficam o presente, a faixa e os confetes. */
+
+.palco {
+  position: relative;
+  width: min(340px, 92vw);
+  height: 430px;
+  margin: 0 auto;
+}
+
+/* =========================================================================
+   =========================================================================
+   P R E S E N T E */
+
+.presente {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: 190px;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.caixa {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(160deg, var(--vermelho), var(--vermelho-escuro));
+  border-radius: 6px;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Fita vertical da caixa e da tampa. */
+.caixa::before,
+.tampa::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--dourado-escuro), var(--dourado-claro), var(--dourado-escuro));
+}
+
+.tampa {
+  position: relative;
+  height: 40px;
+  width: 210px;
+  margin-left: -10px;
+  background: linear-gradient(160deg, #cf1a35, var(--vermelho));
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+/* =========================================================================
+   =========================================================================
+   L A Ç O */
+
+.laco {
+  position: absolute;
+  left: 50%;
+  top: -40px;
+  width: 130px;
+  height: 46px;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+}
+
+.alca {
+  position: absolute;
+  bottom: 4px;
+  width: 62px;
+  height: 42px;
+  border: 11px solid var(--dourado);
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  box-shadow: inset 0 3px 0 var(--dourado-claro), 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.alca.esquerda { left: 0; transform: rotate(-18deg); }
+.alca.direita { right: 0; transform: rotate(18deg); }
+
+.no {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 26px;
+  height: 24px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 40% 35%, var(--dourado-claro), var(--dourado-escuro));
+  border-radius: 8px;
+}
+
+/* =========================================================================
+   =========================================================================
+   P A S S O   1:   B A L A N Ç A R
+   0,4 s x 5 repetições = 2 s (igual a ANIMACAO.DURACAO_BALANCO). */
+
+.presente.balancando { animation: tremer 0.4s ease-in-out 5; }
+.presente.balancando .laco { animation: balancar 0.4s ease-in-out 5; }
+
+@keyframes tremer {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  25% { transform: translateX(-50%) rotate(-3deg); }
+  75% { transform: translateX(-50%) rotate(3deg); }
+}
+
+@keyframes balancar {
+  0%, 100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+  25% { transform: translateX(-50%) rotate(-14deg) scale(1.06); }
+  75% { transform: translateX(-50%) rotate(14deg) scale(1.06); }
+}
+
+/* =========================================================================
+   =========================================================================
+   P A S S O   2:   A B R I R */
+
+.presente.aberto .tampa { animation: voarTampa 0.9s cubic-bezier(0.3, 0.7, 0.4, 1) forwards; }
+
+/* Boca escura da caixa, para parecer aberta depois que a tampa sai. */
+.presente.aberto .caixa {
+  box-shadow: inset 0 16px 0 rgba(0, 0, 0, 0.35), 0 18px 30px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes voarTampa {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translate(-120px, -190px) rotate(-40deg); opacity: 0; }
+}
+
+/* =========================================================================
+   =========================================================================
+   P A S S O   3:   F A I X A   C O M   O   N O M E
+   Começa pequena, escondida atrás da caixa, e sobe com um pulinho. */
+
+.faixa {
+  position: absolute;
+  left: 50%;
+  bottom: 200px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  min-width: 220px;
+  max-width: min(92vw, 380px);
+  padding: 12px 34px 14px;
+  background: linear-gradient(180deg, var(--dourado-claro), var(--dourado) 55%, var(--dourado-escuro));
+  color: var(--verde-escuro);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, 150px) scale(0.2);
+  opacity: 0;
+}
+
+/* Pontas recortadas da faixa. */
+.faixa::before,
+.faixa::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  width: 28px;
+  height: calc(100% - 4px);
+  background: var(--dourado-escuro);
+  z-index: -1;
+}
+.faixa::before { left: -22px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 35% 50%); }
+.faixa::after { right: -22px; clip-path: polygon(0 0, 100% 0, 65% 50%, 100% 100%, 0 100%); }
+
+.faixa.visivel {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  transition: transform 0.9s cubic-bezier(0.2, 1.5, 0.4, 1), opacity 0.3s;
+}
+
+.faixa-rotulo { font-size: 18px; font-weight: 600; }
+
+.faixa-nome {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(34px, 10vw, 48px);
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+
+/* =========================================================================
+   =========================================================================
+   C O N F E T E S   E   E S T R E L I N H A S
+   Cada peça sai do topo da caixa (--dx, --dy) e depois cai. */
+
+.confetes {
+  position: absolute;
+  left: 50%;
+  bottom: 190px;
+  width: 0;
+  height: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.confete,
+.estrelinha {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--cor);
+  opacity: 0;
+  animation: explodir var(--duracao) cubic-bezier(0.15, 0.7, 0.4, 1) var(--atraso) forwards;
+}
+
+.confete { width: 9px; height: 14px; border-radius: 2px; }
+
+.estrelinha {
+  width: 18px;
+  height: 18px;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+@keyframes explodir {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(0.5); }
+  45% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(calc(var(--giro) / 2)) scale(1); }
+  100% { opacity: 0; transform: translate(calc(var(--dx) * 1.2), calc(var(--dy) + 320px)) rotate(var(--giro)) scale(0.9); }
+}
+
+/* =========================================================================
+   =========================================================================
+   M E N O S   M O V I M E N T O
+   Para quem pediu ao celular menos animação: tudo aparece direto. */
+
+@media (prefers-reduced-motion: reduce) {
+  .brilho,
+  .presente.balancando,
+  .presente.balancando .laco { animation: none; }
+  .faixa.visivel { transition: none; }
+}
