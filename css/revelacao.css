@@ -53,7 +53,7 @@
 .segredo {
   margin: 4px auto 0;
   max-width: 340px;
-  font-size: 19px;
+  font-size: 9.5px;
   line-height: 1.35;
   color: var(--dourado-claro);
   opacity: 0;
@@ -333,7 +333,7 @@
   .detalhes h2 { font-size: 18px; margin-bottom: 8px; }
   .detalhe { padding: 4px 0; }
   .detalhes dd { font-size: 19px; }
-  .segredo { font-size: 17px; }
+  .segredo { font-size: 8.5px; }
 }
 
 /* =========================================================================
