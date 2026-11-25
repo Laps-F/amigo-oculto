@@ -3,11 +3,16 @@
 // R E V E L A Ç Ã O
 // Animação da tela de quem abre o link:
 //   brilhos no fundo -> laço balança -> presente abre -> confetes -> faixa com o nome
+//   -> página se reorganiza (tudo encolhe, o nome cresce)
 //   -> aviso de segredo -> cartão com medidas e cores da pessoa sorteada
+// Tudo acontece na mesma tela: nada abre, nada redireciona.
 // Os movimentos ficam no CSS (css/revelacao.css). Aqui só decidimos a ordem e
 // criamos as peças soltas (brilhos e confetes).
 
 import { ANIMACAO, CAMPOS_DETALHES } from "./config.js";
+
+// Espaço livre acima da faixa depois que a página se reorganiza.
+const FOLGA_PALCO_PX = 8;
 
 const CORES_CONFETE = ["#e8c35a", "#f8e3a3", "#b3122b", "#ffffff", "#2e8b57", "#d4a017"];
 
@@ -34,10 +39,30 @@ export async function revelarPresente(pessoaSorteada) {
   abrirPresente();
   await esperar(ANIMACAO.ESPERA_FAIXA);
   elemento("faixa").classList.add("visivel");
+  await esperar(ANIMACAO.ESPERA_REORGANIZAR);
+  reorganizarPagina();
   await esperar(ANIMACAO.ESPERA_SEGREDO);
   elemento("segredo").classList.add("visivel");
   await esperar(ANIMACAO.ESPERA_DETALHES);
   mostrarDetalhes(temDetalhes);
+}
+
+// Encolhe título, saudação e presente e dá destaque ao nome (ver PASSO 4 no CSS).
+// Depois que o nome cresce, o palco se ajusta à altura real da faixa, que muda
+// com o tamanho do nome (uma ou duas linhas) e com a largura do celular.
+async function reorganizarPagina() {
+  document.documentElement.classList.add("revelado");
+  await esperar(ANIMACAO.DURACAO_REORGANIZAR);
+  ajustarAlturaDoPalco();
+  window.addEventListener("resize", ajustarAlturaDoPalco);
+}
+
+// Deixa o palco com a altura exata para a faixa caber sem espaço sobrando.
+function ajustarAlturaDoPalco() {
+  const faixa = elemento("faixa");
+  const distanciaDoChao = parseFloat(getComputedStyle(faixa).bottom);
+  const altura = faixa.offsetHeight + distanciaDoChao + FOLGA_PALCO_PX;
+  elemento("palco").style.setProperty("--altura-palco", `${altura}px`);
 }
 
 // Liga o balanço do laço e espera ele terminar.
@@ -54,8 +79,9 @@ function abrirPresente() {
   soltarConfetes(ANIMACAO.QUANTIDADE_CONFETES);
 }
 
-// Sem animação: presente aberto, faixa e aviso já visíveis.
+// Sem animação: página já reorganizada, com o nome e os detalhes visíveis.
 function mostrarFinalDireto(temDetalhes) {
+  reorganizarPagina();
   elemento("presente").classList.add("aberto");
   elemento("faixa").classList.add("visivel");
   elemento("segredo").classList.add("visivel");
@@ -68,18 +94,23 @@ function mostrarFinalDireto(temDetalhes) {
 // Monta a lista de medidas e cores. Devolve false se nenhuma foi preenchida.
 function preencherDetalhes(detalhes) {
   const preenchidos = CAMPOS_DETALHES.filter(({ chave }) => detalhes[chave]);
-  const linhas = preenchidos.flatMap(({ chave, rotulo }) => criarLinhaDeDetalhe(rotulo, detalhes[chave]));
+  const linhas = preenchidos.map(({ chave, rotulo, largura }) =>
+    criarLinhaDeDetalhe(rotulo, detalhes[chave], largura),
+  );
   elemento("lista-detalhes").replaceChildren(...linhas);
   return preenchidos.length > 0;
 }
 
-// Cria o par rótulo + valor de um detalhe.
-function criarLinhaDeDetalhe(rotulo, valor) {
+// Cria um bloco com rótulo + valor. Os "inteira" ocupam a linha toda no cartão.
+function criarLinhaDeDetalhe(rotulo, valor, largura) {
+  const bloco = document.createElement("div");
+  bloco.className = largura === "inteira" ? "detalhe inteira" : "detalhe";
   const termo = document.createElement("dt");
   termo.textContent = rotulo;
   const descricao = document.createElement("dd");
   descricao.textContent = valor;
-  return [termo, descricao];
+  bloco.append(termo, descricao);
+  return bloco;
 }
 
 // Mostra o cartão de detalhes, só se houver algo para mostrar.

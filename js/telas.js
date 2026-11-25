@@ -44,8 +44,8 @@ function criarBlocoDePessoa(indice) {
   const campoNome = criarCampoComRotulo("Nome", "Ex.: Maria");
   campoNome.input.classList.add("campo-nome");
 
-  const camposDetalhes = CAMPOS_DETALHES.map(({ chave, rotulo, exemplo }) => {
-    const campo = criarCampoComRotulo(rotulo, `Ex.: ${exemplo}`);
+  const camposDetalhes = CAMPOS_DETALHES.map(({ chave, rotuloCadastro, exemplo }) => {
+    const campo = criarCampoComRotulo(rotuloCadastro, `Ex.: ${exemplo}`);
     campo.input.dataset.chave = chave;
     return campo;
   });

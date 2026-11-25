@@ -9,7 +9,9 @@
      1. .balancando no presente: o laço e a caixa balançam por 2 s
      2. .aberto no presente: a tampa voa e os confetes saem
      3. .visivel na faixa: a faixa com o nome sobe de dentro da caixa
-     4. .visivel no "Guarde segredo!" */
+     4. .revelado no <html>: tudo encolhe e o nome cresce, na mesma tela
+     5. .visivel no aviso de segredo e no cartão de medidas
+   Pensado primeiro para celular: tudo cabe numa tela de ~360 x 640. */
 
 .modo-participante {
   --verde-fundo: #0b3a2a;
@@ -31,21 +33,28 @@
   overflow-x: clip;
 }
 
+.modo-participante .pagina { padding: 16px 16px 32px; }
+
 .modo-participante h1 {
+  margin: 8px 0 4px;
   color: var(--dourado);
   font-family: "Playfair Display", Georgia, serif;
   text-align: center;
   font-size: 26px;
   letter-spacing: 0.5px;
+  transition: font-size 0.8s ease;
 }
 
 .cena { text-align: center; position: relative; z-index: 1; }
 
-.saudacao { font-size: 26px; margin: 8px 0 0; }
+.saudacao { font-size: 26px; margin: 8px 0 0; transition: font-size 0.8s ease, margin 0.8s ease; }
 .saudacao strong { color: var(--dourado-claro); }
 
 .segredo {
-  font-size: 22px;
+  margin: 4px auto 0;
+  max-width: 340px;
+  font-size: 19px;
+  line-height: 1.35;
   color: var(--dourado-claro);
   opacity: 0;
   transition: opacity 0.8s;
@@ -59,8 +68,8 @@
 
 .detalhes {
   max-width: 380px;
-  margin: 24px auto 40px;
-  padding: 18px 22px 8px;
+  margin: 16px auto 0;
+  padding: 14px 16px;
   text-align: left;
   border: 1px solid var(--dourado);
   border-radius: 14px;
@@ -72,15 +81,31 @@
 .detalhes.visivel { opacity: 1; transform: none; }
 
 .detalhes h2 {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   font-family: "Playfair Display", Georgia, serif;
-  font-size: 24px;
+  font-size: 20px;
   color: var(--dourado);
   text-align: center;
 }
 
-.detalhes dt { font-size: 16px; color: var(--dourado-claro); }
-.detalhes dd { margin: 2px 0 14px; font-size: 22px; font-weight: 600; overflow-wrap: break-word; }
+/* Medidas lado a lado (três por linha); cores ocupam a linha toda. */
+.detalhes dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.detalhe {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  text-align: center;
+}
+.detalhe.inteira { grid-column: 1 / -1; text-align: left; }
+
+.detalhes dt { font-size: 14px; color: var(--dourado-claro); }
+.detalhes dd { margin: 2px 0 0; font-size: 21px; font-weight: 700; overflow-wrap: break-word; }
 
 /* =========================================================================
    =========================================================================
@@ -113,6 +138,7 @@
   width: min(340px, 92vw);
   height: 430px;
   margin: 0 auto;
+  transition: height 0.8s ease;
 }
 
 /* =========================================================================
@@ -125,6 +151,8 @@
   bottom: 24px;
   width: 190px;
   transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  transition: transform 0.8s ease, bottom 0.8s ease;
   z-index: 3;
 }
 
@@ -249,7 +277,7 @@
   align-items: center;
   width: max-content;
   min-width: 220px;
-  max-width: min(92vw, 380px);
+  max-width: min(calc(100vw - 76px), 380px);
   padding: 12px 34px 14px;
   background: linear-gradient(180deg, var(--dourado-claro), var(--dourado) 55%, var(--dourado-escuro));
   color: var(--verde-escuro);
@@ -283,8 +311,40 @@
 .faixa-nome {
   font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(34px, 10vw, 48px);
+  transition: font-size 0.8s ease;
   line-height: 1.1;
   overflow-wrap: break-word;
+}
+
+/* =========================================================================
+   =========================================================================
+   P A S S O   4:   R E O R G A N I Z A R
+   Depois da revelação: título, saudação e presente encolhem; o palco fica
+   mais baixo; o nome sorteado cresce e vira o centro da tela. */
+
+.revelado h1 { font-size: 18px; }
+.revelado .saudacao { font-size: 18px; margin-top: 0; }
+.revelado .palco { height: var(--altura-palco, 220px); }
+.revelado .presente { transform: translateX(-50%) scale(0.45); bottom: 6px; }
+
+.revelado .faixa {
+  bottom: 74px;
+  padding: 10px 30px 12px;
+  transition: bottom 0.8s ease, transform 0.9s cubic-bezier(0.2, 1.5, 0.4, 1), opacity 0.3s;
+}
+.revelado .faixa-nome { font-size: clamp(42px, 13vw, 60px); }
+
+/* Celulares baixos (ex.: 360 x 640): aperta mais um pouco. */
+@media (max-height: 700px) {
+  .modo-participante .pagina { padding: 8px 16px 8px; }
+  .palco { height: 380px; }
+  .revelado .faixa { bottom: 60px; }
+  .revelado .presente { transform: translateX(-50%) scale(0.38); }
+  .detalhes { margin-top: 10px; padding: 10px 12px; }
+  .detalhes h2 { font-size: 18px; margin-bottom: 8px; }
+  .detalhe { padding: 6px 8px; }
+  .detalhes dd { font-size: 19px; }
+  .segredo { font-size: 17px; }
 }
 
 /* =========================================================================
@@ -336,5 +396,10 @@
   .presente.balancando,
   .presente.balancando .laco { animation: none; }
   .faixa.visivel,
-  .detalhes { transition: none; }
+  .detalhes,
+  .palco,
+  .presente,
+  .faixa-nome,
+  .saudacao,
+  .modo-participante h1 { transition: none; }
 }
