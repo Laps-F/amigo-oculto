@@ -10,28 +10,14 @@ export const NUMERO_PARTICIPANTES = 6;
 export const URL_DO_SITE = "";
 
 // Informações de cada pessoa que aparecem para quem tirar ela.
-// rotulo: texto curto no cartão de quem tirou; rotuloCadastro: texto no formulário.
-// largura "inteira": ocupa a linha toda no cartão; sem ela, divide a linha em três.
 // A ordem aqui é a ordem na tela e no código do link: para não quebrar links
 // já enviados, só acrescente campos novos no fim.
 export const CAMPOS_DETALHES = [
-  { chave: "blusa", rotulo: "Blusa", rotuloCadastro: "Tamanho de blusa", exemplo: "M" },
-  { chave: "calca", rotulo: "Calça", rotuloCadastro: "Tamanho de calça", exemplo: "40" },
-  { chave: "sapato", rotulo: "Sapato", rotuloCadastro: "Numeração de sapato", exemplo: "37" },
-  {
-    chave: "coresPreferidas",
-    rotulo: "Cores que gosta",
-    rotuloCadastro: "Preferência de cores",
-    exemplo: "azul, verde",
-    largura: "inteira",
-  },
-  {
-    chave: "coresEvitar",
-    rotulo: "Cores que não gosta",
-    rotuloCadastro: "Cores que não gosta",
-    exemplo: "laranja",
-    largura: "inteira",
-  },
+  { chave: "blusa", rotulo: "Tamanho de blusa", exemplo: "M" },
+  { chave: "calca", rotulo: "Tamanho de calça", exemplo: "40" },
+  { chave: "sapato", rotulo: "Numeração de sapato", exemplo: "37" },
+  { chave: "coresPreferidas", rotulo: "Preferência de cores", exemplo: "azul, verde" },
+  { chave: "coresEvitar", rotulo: "Cores que não gosta", exemplo: "laranja" },
 ];
 
 // Tempos da animação do presente, em milissegundos.

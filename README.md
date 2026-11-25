@@ -7,7 +7,7 @@ Site estático para sortear o amigo oculto sem que a organizadora saiba o result
 1. Abra o site, digite os nomes de todas as pessoas (inclusive o seu) e, se quiser, as medidas e cores de cada uma. Clique em **Sortear e gerar links**.
 2. O site mostra um link para cada pessoa, sem mostrar quem tirou quem.
 3. Mande cada link só para a pessoa do nome.
-4. Quem abre o link vê um presente cujo laço balança por 2 segundos. Depois ele se abre, solta confetes e mostra uma faixa com o nome sorteado. Não precisa tocar em nada. Depois a página se reorganiza na mesma tela: tudo encolhe, o nome sorteado fica grande e aparecem as medidas e cores da pessoa (só as que foram preenchidas). Feito para caber numa tela de celular sem rolar.
+4. Quem abre o link vê um presente cujo laço balança por 2 segundos. Depois ele se abre, solta confetes e mostra uma faixa com o nome sorteado. Não precisa tocar em nada. Depois a página se reorganiza na mesma tela: tudo encolhe, o nome sorteado fica grande e aparecem as medidas e cores da pessoa (só as que foram preenchidas). Feito para celular.
 
 Nada é salvo em servidor: o resultado de cada pessoa vai embaralhado no fim do próprio link (`#codigo`).
 Copie todos os links antes de sair da página, porque eles somem se ela for recarregada.

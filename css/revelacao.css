@@ -88,24 +88,13 @@
   text-align: center;
 }
 
-/* Medidas lado a lado (três por linha); cores ocupam a linha toda. */
-.detalhes dl {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0;
-}
+/* Uma informação embaixo da outra: rótulo pequeno em cima, valor grande embaixo. */
+.detalhes dl { margin: 0; }
+.detalhe { padding: 6px 0; }
+.detalhe + .detalhe { border-top: 1px solid rgba(232, 195, 90, 0.25); }
 
-.detalhe {
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.22);
-  text-align: center;
-}
-.detalhe.inteira { grid-column: 1 / -1; text-align: left; }
-
-.detalhes dt { font-size: 14px; color: var(--dourado-claro); }
-.detalhes dd { margin: 2px 0 0; font-size: 21px; font-weight: 700; overflow-wrap: break-word; }
+.detalhes dt { font-size: 15px; color: var(--dourado-claro); }
+.detalhes dd { margin: 0; font-size: 21px; font-weight: 700; overflow-wrap: break-word; }
 
 /* =========================================================================
    =========================================================================
@@ -342,7 +331,7 @@
   .revelado .presente { transform: translateX(-50%) scale(0.38); }
   .detalhes { margin-top: 10px; padding: 10px 12px; }
   .detalhes h2 { font-size: 18px; margin-bottom: 8px; }
-  .detalhe { padding: 6px 8px; }
+  .detalhe { padding: 4px 0; }
   .detalhes dd { font-size: 19px; }
   .segredo { font-size: 17px; }
 }

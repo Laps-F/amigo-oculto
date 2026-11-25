@@ -94,17 +94,15 @@ function mostrarFinalDireto(temDetalhes) {
 // Monta a lista de medidas e cores. Devolve false se nenhuma foi preenchida.
 function preencherDetalhes(detalhes) {
   const preenchidos = CAMPOS_DETALHES.filter(({ chave }) => detalhes[chave]);
-  const linhas = preenchidos.map(({ chave, rotulo, largura }) =>
-    criarLinhaDeDetalhe(rotulo, detalhes[chave], largura),
-  );
+  const linhas = preenchidos.map(({ chave, rotulo }) => criarLinhaDeDetalhe(rotulo, detalhes[chave]));
   elemento("lista-detalhes").replaceChildren(...linhas);
   return preenchidos.length > 0;
 }
 
-// Cria um bloco com rótulo + valor. Os "inteira" ocupam a linha toda no cartão.
-function criarLinhaDeDetalhe(rotulo, valor, largura) {
+// Cria um bloco com o rótulo em cima e o valor embaixo.
+function criarLinhaDeDetalhe(rotulo, valor) {
   const bloco = document.createElement("div");
-  bloco.className = largura === "inteira" ? "detalhe inteira" : "detalhe";
+  bloco.className = "detalhe";
   const termo = document.createElement("dt");
   termo.textContent = rotulo;
   const descricao = document.createElement("dd");
