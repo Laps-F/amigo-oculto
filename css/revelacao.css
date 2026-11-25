@@ -53,7 +53,7 @@
 .segredo {
   margin: 4px auto 0;
   max-width: 340px;
-  font-size: 9.5px;
+  font-size: 16px;
   line-height: 1.35;
   color: var(--dourado-claro);
   opacity: 0;
@@ -88,13 +88,21 @@
   text-align: center;
 }
 
-/* Uma informação embaixo da outra: rótulo pequeno em cima, valor grande embaixo. */
+/* Uma informação por linha, com o valor na frente do rótulo: "Tamanho de blusa: M".
+   Se o valor for comprido, ele quebra para a linha de baixo sozinho. */
 .detalhes dl { margin: 0; }
-.detalhe { padding: 6px 0; }
+.detalhe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 6px;
+  padding: 6px 0;
+}
 .detalhe + .detalhe { border-top: 1px solid rgba(232, 195, 90, 0.25); }
 
-.detalhes dt { font-size: 15px; color: var(--dourado-claro); }
-.detalhes dd { margin: 0; font-size: 21px; font-weight: 700; overflow-wrap: break-word; }
+.detalhes dt { font-size: 16px; color: var(--dourado-claro); }
+.detalhes dt::after { content: ":"; }
+.detalhes dd { margin: 0; font-size: 19px; font-weight: 700; overflow-wrap: break-word; }
 
 /* =========================================================================
    =========================================================================
@@ -332,8 +340,8 @@
   .detalhes { margin-top: 10px; padding: 10px 12px; }
   .detalhes h2 { font-size: 18px; margin-bottom: 8px; }
   .detalhe { padding: 4px 0; }
-  .detalhes dd { font-size: 19px; }
-  .segredo { font-size: 8.5px; }
+  .detalhes dd { font-size: 18px; }
+  .segredo { font-size: 14.5px; }
 }
 
 /* =========================================================================
