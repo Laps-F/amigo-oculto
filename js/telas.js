@@ -107,9 +107,14 @@ export function avisarCopiaNoBotao(botao, textoOriginal, deuCerto) {
 // =============================================================================
 // P A R T I C I P A N T E
 
-// Preenche a saudação da tela de revelar.
+// Preenche a saudação da tela de contagem.
 export function prepararRevelacao(nomeDeQuemTira) {
   elemento("nome-quem").textContent = nomeDeQuemTira;
+}
+
+// Mostra o número atual da contagem.
+export function mostrarNumeroDaContagem(numero) {
+  elemento("contagem").textContent = String(numero);
 }
 
 // Preenche a tela de resultado.
@@ -130,5 +135,4 @@ export function ligarEventos(acoes) {
     acoes.aoCopiarTodos(evento.currentTarget),
   );
   elemento("botao-novo-sorteio").addEventListener("click", acoes.aoNovoSorteio);
-  elemento("botao-revelar").addEventListener("click", acoes.aoRevelar);
 }

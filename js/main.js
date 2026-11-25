@@ -5,7 +5,7 @@
 //   sem #codigo  -> modo organizadora: cadastra nomes, sorteia, gera links
 //   com #codigo  -> modo participante: mostra quem a pessoa tirou
 
-import { NUMERO_PARTICIPANTES, TEXTOS, URL_DO_SITE } from "./config.js";
+import { NUMERO_PARTICIPANTES, SEGUNDOS_CONTAGEM, TEXTOS, URL_DO_SITE } from "./config.js";
 import { decodificarResultado } from "./codificacao.js";
 import { juntarLinksEmTexto, lerCodigoDoEndereco, montarLinks } from "./links.js";
 import { limparNome, sortearPares, validarNomes } from "./sorteio.js";
@@ -14,8 +14,7 @@ import * as telas from "./telas.js";
 // Links do último sorteio, guardados só na memória desta página.
 let linksGerados = [];
 
-// Resultado do link aberto (modo participante).
-let resultadoDoLink = null;
+const UM_SEGUNDO_MS = 1000;
 
 // =============================================================================
 // I N I C I A L I Z A Ç Ã O
@@ -26,7 +25,6 @@ function iniciar() {
     aoSortear: tratarSortear,
     aoCopiarTodos: tratarCopiarTodos,
     aoNovoSorteio: tratarNovoSorteio,
-    aoRevelar: tratarRevelar,
   });
 
   const codigo = lerCodigoDoEndereco(location.hash);
@@ -81,21 +79,37 @@ function enderecoBase() {
 // =============================================================================
 // M O D O   P A R T I C I P A N T E
 
-// Lê o resultado do link e mostra a saudação, ainda sem revelar.
+// Lê o resultado do link, faz a contagem e mostra o nome sorteado, sem nenhum clique.
 function iniciarModoParticipante(codigo) {
-  resultadoDoLink = decodificarResultado(codigo);
-  if (!resultadoDoLink) {
+  const resultado = decodificarResultado(codigo);
+  if (!resultado) {
     telas.mostrarTela("link-invalido");
     return;
   }
-  telas.prepararRevelacao(resultadoDoLink.nomeDeQuemTira);
+  telas.prepararRevelacao(resultado.nomeDeQuemTira);
   telas.mostrarTela("revelar");
+  fazerContagemRegressiva(SEGUNDOS_CONTAGEM, telas.mostrarNumeroDaContagem, () =>
+    mostrarResultado(resultado.nomeSorteado),
+  );
 }
 
-// Pessoa pediu para ver quem tirou.
-function tratarRevelar() {
-  telas.prepararResultado(resultadoDoLink.nomeSorteado);
+// Troca a contagem pelo nome sorteado.
+function mostrarResultado(nomeSorteado) {
+  telas.prepararResultado(nomeSorteado);
   telas.mostrarTela("resultado");
+}
+
+// Chama aCadaSegundo(3), (2), (1), um por segundo, e depois aoTerminar().
+function fazerContagemRegressiva(segundos, aCadaSegundo, aoTerminar) {
+  if (segundos <= 0) {
+    aoTerminar();
+    return;
+  }
+  aCadaSegundo(segundos);
+  setTimeout(
+    () => fazerContagemRegressiva(segundos - 1, aCadaSegundo, aoTerminar),
+    UM_SEGUNDO_MS,
+  );
 }
 
 // =============================================================================

@@ -7,7 +7,7 @@ Site estático para sortear o amigo oculto sem que a organizadora saiba o result
 1. Abra o site, digite os nomes de todas as pessoas (inclusive o seu) e clique em **Sortear e gerar links**.
 2. O site mostra um link para cada pessoa, sem mostrar quem tirou quem.
 3. Mande cada link só para a pessoa do nome.
-4. Quem abre o link toca em **Mostrar quem eu tirei** e vê o resultado.
+4. Quem abre o link vê uma contagem de 3 segundos e, em seguida, o nome sorteado em letras grandes. Não precisa tocar em nada.
 
 Nada é salvo em servidor: o resultado de cada pessoa vai embaralhado no fim do próprio link (`#codigo`).
 Copie todos os links antes de sair da página, porque eles somem se ela for recarregada.

@@ -54,16 +54,16 @@
     <!-- =================================================================== -->
     <!-- P A R T I C I P A N T E                                               -->
 
-    <section id="tela-revelar" class="tela" hidden>
-      <p>Olá, <strong id="nome-quem"></strong>!</p>
-      <p>Quando estiver sozinha, toque no botão para ver quem você tirou.</p>
-      <button id="botao-revelar" type="button">Mostrar quem eu tirei</button>
+    <section id="tela-revelar" class="tela participante" hidden>
+      <p class="saudacao">Olá, <strong id="nome-quem"></strong>!</p>
+      <p>Seu amigo oculto aparece em</p>
+      <p id="contagem" class="contagem" aria-live="polite"></p>
     </section>
 
-    <section id="tela-resultado" class="tela" hidden>
-      <p>Você tirou:</p>
+    <section id="tela-resultado" class="tela participante" hidden>
+      <p class="saudacao">Você tirou:</p>
       <p id="nome-sorteado" class="sorteado"></p>
-      <p class="dica">Guarde segredo. Você pode abrir este link de novo quando quiser.</p>
+      <p>Guarde segredo!</p>
     </section>
 
     <section id="tela-link-invalido" class="tela" hidden>
