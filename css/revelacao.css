@@ -52,7 +52,8 @@
 
 .segredo {
   margin: 4px auto 0;
-  max-width: 340px;
+  max-width: none;
+  white-space: nowrap;
   font-size: 16px;
   line-height: 1.35;
   color: var(--dourado-claro);
