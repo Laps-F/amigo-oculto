@@ -1,0 +1,68 @@
+/* =========================================================================
+   =========================================================================
+   B A S E
+   Estilo mínimo: o foco por enquanto é o funcionamento. */
+
+:root {
+  color-scheme: light dark;
+  --fundo: light-dark(#ffffff, #14161a);
+  --texto: light-dark(#1a1a1a, #eeeeee);
+  --destaque: #b3261e;
+  --borda: light-dark(#cccccc, #444444);
+}
+:root[data-theme=light] { color-scheme: light; }
+:root[data-theme=dark] { color-scheme: dark; }
+
+* { box-sizing: border-box; min-width: 0; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+.pagina { max-width: 520px; margin: 0 auto; padding: 24px 16px; }
+
+/* =========================================================================
+   =========================================================================
+   C O N T R O L E S */
+
+button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--destaque);
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+button.secundario { background: transparent; color: var(--texto); border: 1px solid var(--borda); }
+button.perigo { background: transparent; color: var(--destaque); border: 1px solid var(--destaque); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+input {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+/* =========================================================================
+   =========================================================================
+   T E L A S */
+
+.lista-links { display: grid; gap: 16px; margin-bottom: 16px; }
+.linha-link { display: grid; gap: 4px; }
+.linha-link input { margin-bottom: 0; font-size: 13px; }
+.alerta { font-weight: 600; }
+.acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.sorteado { font-size: 40px; font-weight: 700; color: var(--destaque); margin: 8px 0; }
+.dica { opacity: 0.75; font-size: 14px; }
+.erros { color: var(--destaque); padding-left: 18px; }

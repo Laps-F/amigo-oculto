@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+  Amigo oculto de Natal
+
+  Como funciona: a organizadora digita os nomes e o site sorteia. Ela recebe
+  um link por pessoa, sem ver o resultado. O resultado de cada pessoa vai
+  embaralhado no fim do próprio link (#codigo). Nada é salvo em servidor.
+
+  Mapa dos arquivos:
+    index.html         estrutura das telas (só marcação)
+    css/estilo.css     estilo básico
+    js/config.js       constantes: quantidade de pessoas, endereço e textos
+    js/sorteio.js      regras do sorteio (funções puras)
+    js/codificacao.js  embaralha e desembaralha o resultado de cada link
+    js/links.js        monta os links e lê o código do endereço
+    js/telas.js        desenho das telas e leitura do formulário
+    js/main.js         ponto de entrada: decide o modo e liga as partes
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amigo oculto de Natal</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <main class="pagina">
+    <h1>Amigo oculto de Natal</h1>
+
+    <!-- =================================================================== -->
+    <!-- O R G A N I Z A D O R A                                               -->
+
+    <section id="tela-cadastro" class="tela" hidden>
+      <h2>Cadastrar participantes</h2>
+      <p>Escreva o nome de cada pessoa, inclusive o seu. Você vai receber um link para cada uma, sem ver quem tirou quem.</p>
+      <form id="formulario-nomes">
+        <div id="campos-nomes"></div>
+        <ul id="erros-formulario" class="erros"></ul>
+        <button type="submit">Sortear e gerar links</button>
+      </form>
+    </section>
+
+    <section id="tela-links" class="tela" hidden>
+      <h2>Links prontos</h2>
+      <p>Mande cada link só para a pessoa do nome. Os links não mostram o resultado, mas não abra o link das outras pessoas.</p>
+      <p class="alerta">Copie todos antes de sair desta página. Se recarregar, os links somem e é preciso sortear de novo.</p>
+      <div id="lista-links" class="lista-links"></div>
+      <div class="acoes">
+        <button id="botao-copiar-todos" type="button">Copiar todos os links</button>
+        <button id="botao-novo-sorteio" type="button" class="secundario">Fazer novo sorteio</button>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- P A R T I C I P A N T E                                               -->
+
+    <section id="tela-revelar" class="tela" hidden>
+      <p>Olá, <strong id="nome-quem"></strong>!</p>
+      <p>Quando estiver sozinha, toque no botão para ver quem você tirou.</p>
+      <button id="botao-revelar" type="button">Mostrar quem eu tirei</button>
+    </section>
+
+    <section id="tela-resultado" class="tela" hidden>
+      <p>Você tirou:</p>
+      <p id="nome-sorteado" class="sorteado"></p>
+      <p class="dica">Guarde segredo. Você pode abrir este link de novo quando quiser.</p>
+    </section>
+
+    <section id="tela-link-invalido" class="tela" hidden>
+      <p>Este link não está completo. Peça o link de novo para a organizadora.</p>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
