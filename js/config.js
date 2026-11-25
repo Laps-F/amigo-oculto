@@ -3,7 +3,7 @@
 // C O N F I G U R A Ç Ã O
 // Valores fixos do site. Mudar aqui muda o site inteiro.
 
-export const NUMERO_PARTICIPANTES = 6;
+export const NUMERO_PARTICIPANTES = 2;
 
 // Endereço público do site. Os links de cada pessoa são montados a partir dele.
 // Vazio: usa o endereço da própria página (funciona em qualquer hospedagem).
